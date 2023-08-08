@@ -1,0 +1,12 @@
+---
+replication:
+  - active: cluster1
+    synced_to:
+      - cluster2
+credentials:
+  - name: cluster1
+    appRole: "vault-cluster-replication"
+    secretID: "xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx"
+  - name: cluster2
+    appRole: "vault-cluster-replication"
+    secretID: "xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx"
