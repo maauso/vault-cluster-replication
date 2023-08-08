@@ -8,7 +8,7 @@ func Run(config Config) {
 	for _, rep := range config.Replication {
 		fmt.Printf("Active: %s\n", rep.Active)
 		fmt.Println("Synced To:")
-		for _, synced := range rep.SyncedTo {
+		for _, synced := range rep.SyncTo {
 			fmt.Printf("  - %s\n", synced)
 		}
 		fmt.Println()

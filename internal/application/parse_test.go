@@ -11,8 +11,12 @@ func TestParseConfigFile(t *testing.T) {
 	expectedConfig := Config{
 		Replication: []ReplicationConfig{
 			{
-				Active:   "cluster1",
-				SyncedTo: []string{"cluster2"},
+				Active: "cluster1",
+				SyncTo: []string{"cluster2"},
+			},
+			{
+				Active: "cluster3",
+				SyncTo: []string{"cluster4", "cluster5"},
 			},
 		},
 		Credentials: []Credential{
@@ -23,6 +27,21 @@ func TestParseConfigFile(t *testing.T) {
 			},
 			{
 				Name:     "cluster2",
+				AppRole:  "vault-cluster-replication",
+				SecretID: "xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx",
+			},
+			{
+				Name:     "cluster3",
+				AppRole:  "vault-cluster-replication",
+				SecretID: "xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx",
+			},
+			{
+				Name:     "cluster4",
+				AppRole:  "vault-cluster-replication",
+				SecretID: "xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx",
+			},
+			{
+				Name:     "cluster5",
 				AppRole:  "vault-cluster-replication",
 				SecretID: "xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx",
 			},

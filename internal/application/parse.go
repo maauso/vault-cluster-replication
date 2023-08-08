@@ -7,8 +7,8 @@ import (
 )
 
 type ReplicationConfig struct {
-	Active   string   `yaml:"active"`
-	SyncedTo []string `yaml:"synced_to"`
+	Active string   `yaml:"active"`
+	SyncTo []string `yaml:"sync_to"`
 }
 
 type Credential struct {

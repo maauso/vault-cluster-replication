@@ -15,7 +15,8 @@ func main() {
 	fmt.Println(cnf.ConfigPath)
 	applicationConfig, err := application.ParseConfigFile(cnf.ConfigPath)
 	if err != nil {
-		fmt.Errorf("error parsing config file: %w", err)
+		err := fmt.Errorf("error parsing config file: %w", err)
+		fmt.Println(err)
 	}
 	application.Run(applicationConfig)
 }
