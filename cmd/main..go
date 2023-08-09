@@ -3,11 +3,12 @@ package main
 import (
 	"fmt"
 	"github.com/vrischmann/envconfig"
+	"os"
 	"vault-cluster-replication/internal/application"
 )
 
 type Config struct {
-	ConfigPath string `envconfig:"default=./test-config.yaml"`
+	ConfigPath string `envconfig:"default=tests/test-config.yaml"`
 }
 
 func main() {
@@ -17,7 +18,14 @@ func main() {
 	if err != nil {
 		err := fmt.Errorf("error parsing config file: %w", err)
 		fmt.Println(err)
+		os.Exit(1)
 	}
+	err = application.ConfigValidator(applicationConfig)
+	if err != nil {
+		fmt.Println(err)
+		os.Exit(1)
+	}
+
 	application.Run(applicationConfig)
 }
 
