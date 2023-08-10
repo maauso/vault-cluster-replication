@@ -1,0 +1,41 @@
+load('ext://helm_remote', 'helm_remote')
+
+helm_remote(
+  'vault',
+  repo_name='hashicorp',
+  repo_url='https://helm.releases.hashicorp.com',
+  values='vault-values.yml',
+  namespace='vault-1',
+  create_namespace=True,
+  set=['server.service.port=8200', 'global.namespace="vault-1"', 'server.dev.enabled=true','injector.enabled=false']
+
+)
+
+k8s_resource(
+  workload='vault:statefulset:vault-1',
+  port_forwards=8200
+)
+
+
+
+update_env={'VAULT_ADDR': 'http://localhost:8200', 'VAULT_TOKEN': 'root'}
+local_resource('vault-1-resources-creation', cmd='/bin/bash ./create_role.sh',env=update_env, auto_init=False)
+
+helm_remote(
+  'vault',
+  repo_name='hashicorp',
+  repo_url='https://helm.releases.hashicorp.com',
+  values='vault-values.yml',
+  namespace='vault-2',
+  create_namespace=True,
+  set=['server.service.port=8300', 'global.namespace="vault-2"', 'server.dev.enabled=true', 'injector.enabled=false']
+)
+
+k8s_resource(
+  workload='vault:statefulset:vault-2',
+  port_forwards=8300
+)
+
+
+update_env={'VAULT_ADDR': 'http://localhost:8300', 'VAULT_TOKEN': 'root'}
+local_resource('vault-2-resources-creation', cmd='/bin/bash ./create_role.sh',env=update_env, auto_init=False)

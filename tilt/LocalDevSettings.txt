@@ -1,0 +1,2 @@
+VAULT_ROLE_ID=vaultClusterReplication
+VAULT_SECRET_ID=root
