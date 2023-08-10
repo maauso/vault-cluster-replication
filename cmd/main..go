@@ -8,7 +8,7 @@ import (
 )
 
 type Config struct {
-	ConfigPath string `envconfig:"default=tests/test-config.yaml"`
+	ConfigPath string `envconfig:"default=configs/default-conf.yaml"`
 }
 
 func main() {
