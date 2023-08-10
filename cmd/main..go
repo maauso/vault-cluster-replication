@@ -2,9 +2,10 @@ package main
 
 import (
 	"fmt"
-	"github.com/vrischmann/envconfig"
 	"os"
 	"vault-cluster-replication/internal/application"
+
+	"github.com/vrischmann/envconfig"
 )
 
 type Config struct {
@@ -26,7 +27,11 @@ func main() {
 		os.Exit(1)
 	}
 
-	application.Run(applicationConfig)
+	err = application.Run(applicationConfig)
+	if err != nil {
+		fmt.Println(err)
+		os.Exit(1)
+	}
 }
 
 func parseConfig() Config {

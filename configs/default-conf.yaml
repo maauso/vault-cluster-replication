@@ -5,8 +5,8 @@ replication:
       - "http://localhost:8300"
 credentials:
   - name: "http://localhost:8200"
-    appRole: "vault-cluster-replication"
+    appRole: "vaultClusterReplication"
     secretID: "root"
   - name: "http://localhost:8300"
-    appRole: "vault-cluster-replication"
+    appRole: "vaultClusterReplication"
     secretID: "root"
