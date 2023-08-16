@@ -21,3 +21,5 @@
 go.work
 # Default ignored files
 .idea/**
+/tilt/vault-1_unseal_keys.json
+/tilt/vault-2_unseal_keys.json

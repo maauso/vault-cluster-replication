@@ -14,7 +14,7 @@ func NewClusterCredential(clusterName string, connection storage.Syncer) Cluster
 
 type ClusterCredentials []ClusterCredential
 
-func getClustersCredentials(config Config, client storage.Client) (ClusterCredentials, error) {
+func getClustersToken(config Config, client storage.Client) (ClusterCredentials, error) {
 	credentials := ClusterCredentials{}
 	for _, cred := range config.Credentials {
 		clientConnection, err := client.NewSysClientConnection(cred.Name, cred.AppRole, cred.SecretID)
