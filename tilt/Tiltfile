@@ -4,11 +4,10 @@ helm_remote(
   'vault',
   repo_name='hashicorp',
   repo_url='https://helm.releases.hashicorp.com',
-  values='vault-values.yml',
   namespace='vault-1',
   create_namespace=True,
-  set=['server.service.port=8200', 'global.namespace="vault-1"', 'server.dev.enabled=true','injector.enabled=false']
-
+  values='values.yaml',
+  set=['server.service.port=8200', 'global.namespace="vault-1"']
 )
 
 k8s_resource(
@@ -16,26 +15,26 @@ k8s_resource(
   port_forwards=8200
 )
 
-
-
-update_env={'VAULT_ADDR': 'http://localhost:8200', 'VAULT_TOKEN': 'root'}
-local_resource('vault-1-resources-creation', cmd='/bin/bash ./create_role.sh',env=update_env, auto_init=False)
+update_env={'VAULT_ADDR': 'http://localhost:8200'}
+local_resource('vault-1-operator-init', cmd='/bin/bash ./vault-1_create_operator-init.sh',env=update_env, auto_init=False)
 
 helm_remote(
   'vault',
   repo_name='hashicorp',
   repo_url='https://helm.releases.hashicorp.com',
-  values='vault-values.yml',
   namespace='vault-2',
   create_namespace=True,
-  set=['server.service.port=8300', 'global.namespace="vault-2"', 'server.dev.enabled=true', 'injector.enabled=false']
+  values='values.yaml',
+  set=['server.service.port=8300', 'global.namespace="vault-2"', 'standalone.ha.enabled=true', 'standalone.ha.replicas=1']
 )
 
 k8s_resource(
   workload='vault:statefulset:vault-2',
-  port_forwards=8300
+  port_forwards=8300,
+  resource_deps=['vault-1-operator-init']
 )
 
 
-update_env={'VAULT_ADDR': 'http://localhost:8300', 'VAULT_TOKEN': 'root'}
-local_resource('vault-2-resources-creation', cmd='/bin/bash ./create_role.sh',env=update_env, auto_init=False)
+update_env={'VAULT_ADDR': 'http://localhost:8300'}
+local_resource('vault-2-operator-init', cmd='/bin/bash ./vault-2_create_operator-init.sh',env=update_env, auto_init=False, resource_deps=['vault-1-operator-init'])
+

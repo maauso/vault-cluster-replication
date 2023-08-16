@@ -41,7 +41,7 @@ func (s System) PullSnapshot() (string, error) {
 		return "", fmt.Errorf("unable to generate snapshot, %s", err.Error())
 	}
 	logs.Logger.Info("writing snapshot locally in " + backupFile)
-	err = os.WriteFile(backupFile, snapshot.Bytes(), 0644)
+	err = os.WriteFile(backupFile, snapshot.Bytes(), 0600)
 	if err != nil {
 		return "", fmt.Errorf("unable to write snapshot to file, %s", err.Error())
 	}
