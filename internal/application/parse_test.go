@@ -6,6 +6,7 @@ import (
 )
 
 func TestParseConfigFile(t *testing.T) {
+	t.Parallel()
 	filePath := "../../tests/test-config.yaml" // Create a test YAML file with sample content for testing
 
 	expectedConfig := Config{

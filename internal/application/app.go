@@ -16,11 +16,9 @@ func Run(config Config) error {
 	}
 
 	return nil
-
 }
 
 func replicator(config Config, credentials ClusterCredentials) error {
-
 	for _, replication := range config.Replication {
 		sync := getClusterCredentials(replication.Active, credentials)
 		backup, err := sync.PullSnapshot()
@@ -34,21 +32,19 @@ func replicator(config Config, credentials ClusterCredentials) error {
 				return err
 			}
 		}
-
 	}
 
 	return nil
-
 }
 
 func getClusterCredentials(clusterURL string, credentials ClusterCredentials) storage.Syncer {
-
 	for _, credential := range credentials {
 		if credential.ClusterName == clusterURL {
-			return credential.Connection
+			connectionCredentials := credential.Connection
+
+			return connectionCredentials
 		}
 	}
 
 	return nil
-
 }

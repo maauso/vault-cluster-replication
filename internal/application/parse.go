@@ -2,8 +2,9 @@ package application
 
 import (
 	"fmt"
-	"gopkg.in/yaml.v3"
 	"os"
+
+	"gopkg.in/yaml.v3"
 )
 
 type ReplicationConfig struct {
@@ -20,6 +21,13 @@ type Credential struct {
 type Config struct {
 	Replication []ReplicationConfig `yaml:"replication"`
 	Credentials []Credential        `yaml:"credentials"`
+}
+
+func NewConfig(replication []ReplicationConfig, credentials []Credential) Config {
+	return Config{
+		Replication: replication,
+		Credentials: credentials,
+	}
 }
 
 func ParseConfigFile(filePath string) (Config, error) {

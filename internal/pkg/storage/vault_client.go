@@ -7,6 +7,8 @@ import (
 	"github.com/hashicorp/vault/api"
 )
 
+const timeoutSeconds = 3600
+
 type Login interface {
 	NewSysClientConnection(vaultAddr, appRoleID, appSecretID string) (Syncer, error)
 }
@@ -15,10 +17,10 @@ type Client struct {
 	Login
 }
 
-// It creates a new Vault client, authenticates with the AppRole, and returns a new Vault storage client
+// It creates a new Vault client, authenticates with the AppRole, and returns a new Vault storage client.
 func (c *Client) NewSysClientConnection(vaultAddr, appRoleID, appSecretID string) (Syncer, error) {
 	httpClient := &http.Client{
-		Timeout: 3600 * time.Second,
+		Timeout: timeoutSeconds * time.Second,
 	}
 
 	client, err := api.NewClient(
@@ -40,5 +42,7 @@ func (c *Client) NewSysClientConnection(vaultAddr, appRoleID, appSecretID string
 	}
 	client.SetToken(resp.Auth.ClientToken)
 
-	return NewSystemClient(client.Sys()), nil
+	sysClient := NewSystemClient(client.Sys())
+
+	return sysClient, nil
 }

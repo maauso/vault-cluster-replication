@@ -7,7 +7,7 @@ type ClusterCredential struct {
 	Connection  storage.Syncer
 }
 
-// NewClusterCredential creates a new ClusterCredential instance
+// NewClusterCredential creates a new ClusterCredential instance.
 func NewClusterCredential(clusterName string, connection storage.Syncer) ClusterCredential {
 	return ClusterCredential{ClusterName: clusterName, Connection: connection}
 }

@@ -1,0 +1,49 @@
+run:
+  timeout: 10m
+
+linters-settings:
+  govet:
+    check-shadowing: true
+  wsl:
+    allow-cuddle-declarations: true
+    allow-assign-and-anything: true
+  funlen:
+    lines: 100
+  wrapcheck:
+    ignoreSigs:
+      - multierr.Append
+
+
+linters:
+  enable-all: true
+  disable:
+    - wsl
+    - scopelint
+    - gochecknoinits
+    - interfacer
+    - maligned
+    - golint
+    - deadcode
+    - ifshort
+    - varcheck
+    - structcheck
+    - nosnakecase
+    - exhaustivestruct
+    - testpackage
+    - gci
+    - tagliatelle
+    - ireturn
+    - funlen
+    - wrapcheck
+    - depguard
+    - exhaustruct
+    - varnamelen
+    - noctx
+    - goerr113
+    - gofumpt
+    # review below
+    - forcetypeassert
+    - contextcheck
+    - revive
+    - paralleltest
+    - tparallel

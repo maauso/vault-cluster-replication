@@ -11,10 +11,11 @@ import (
 	"sigs.k8s.io/controller-runtime/pkg/log/zap"
 )
 
-// Logger is the common var logs
-var Logger logr.Logger
+// Logger is the common var logs.
 
-func init() {
+var Logger logr.Logger //nolint:gochecknoglobals
+
+func init() { //nolint:gochecknoinits
 	configLog := uzap.NewProductionEncoderConfig()
 	configLog.EncodeTime = func(ts time.Time, encoder zapcore.PrimitiveArrayEncoder) {
 		encoder.AppendString(ts.UTC().Format(time.RFC3339Nano))
