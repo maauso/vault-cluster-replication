@@ -10,10 +10,11 @@ import (
 	"io"
 	"os"
 	"time"
+
 	"vault-cluster-replication/internal/pkg/logs"
 )
 
-const filePermission = 0600
+const filePermission = 0o600
 
 // Syncer is an interface that provides methods for pulling and pushing snapshots.
 type Syncer interface {

@@ -1,18 +1,29 @@
+---
 run:
   timeout: 10m
+  # Exclude vendor and auto-generated files
+  skip-dirs:
+    - vendor
+    - .git
+    - _tools
+  # Specify concurrency level for linting
+  concurrency: 4
 
 linters-settings:
+  gocyclo:
+    # Set cyclomatic complexity threshold (adjust as needed)
+    enabled: true
+    threshold: 15
   govet:
     check-shadowing: true
-  wsl:
-    allow-cuddle-declarations: true
-    allow-assign-and-anything: true
   funlen:
-    lines: 100
+    lines: 180
   wrapcheck:
     ignoreSigs:
       - multierr.Append
-
+  gofmt:
+    # Use gofumpt instead of gofmt
+    gofumpt: true
 
 linters:
   enable-all: true
@@ -33,7 +44,6 @@ linters:
     - gci
     - tagliatelle
     - ireturn
-    - funlen
     - wrapcheck
     - depguard
     - exhaustruct

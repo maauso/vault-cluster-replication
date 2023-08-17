@@ -2,6 +2,7 @@ package main
 
 import (
 	"os"
+
 	"vault-cluster-replication/internal/application"
 	"vault-cluster-replication/internal/pkg/logs"
 
