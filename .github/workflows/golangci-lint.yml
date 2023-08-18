@@ -2,7 +2,6 @@ name: golangci-lint
 on:
   push:
     branches:
-      - master
       - main
   pull_request:
 
@@ -40,3 +39,13 @@ jobs:
         uses: actions/checkout@v2
       - name: Test
         run: go test ./...
+
+  markdown-lint:
+    name: markdown-lint
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - name: markdownlint
+        uses: markdownlint/markdownlint-action@v0.6.0
+        with:
+          config: .markdownlint.yml

@@ -1,6 +1,6 @@
-# (WIP) Hashicorp Vault Cluster Replication Application (vault-cluster-replication)
+# Vault Replication Application (vault-cluster-replication)
 
-- [(WIP) Hashicorp Vault Cluster Replication Application (vault-cluster-replication)](#wip-hashicorp-vault-cluster-replication-application-vault-cluster-replication)
+- [Vault Replication Application (vault-cluster-replication)](#vault-replication-application-vault-cluster-replication)
   - [Introduction](#introduction)
   - [Configuration](#configuration)
     - [Replication Configuration](#replication-configuration)
@@ -9,9 +9,8 @@
   - [Test it locally](#test-it-locally)
     - [Prerequisites](#prerequisites)
     - [Setup](#setup)
-      - [Run Tilt:](#run-tilt)
-      - [Access Vault UI:](#access-vault-ui)
-
+      - [Run Tilt](#run-tilt)
+      - [Access Vault UI](#access-vault-ui)
 
 ## Introduction
 
@@ -104,7 +103,7 @@ For enhanced security, consider using Kubernetes Secrets to store the configurat
 The test environment is based on Tilt.
 The tilt fins can be found in the [tilt](./tilt) directory.
 
-#### Run Tilt:
+#### Run Tilt
 
 Run the following command in the terminal to start Tilt:
 
@@ -136,12 +135,12 @@ By following these steps, you'll ensure the proper unsealing of both Vault clust
 application-specific `appRole` configurations. Tilt streamlines the deployment process, while your manual involvement
 guarantees the appropriate setup of each cluster and the seamless integration of the application.
 
-#### Access Vault UI:
+#### Access Vault UI
 
 Tilt will set up port forwarding for you, so you can access the Vault UI in your browser:
 
-For vault-1, visit http://localhost:8200
-For vault-2, visit http://localhost:8300
+For vault-1, visit [http://localhost:8200](http://localhost:8200)
+For vault-2, visit [http://localhost:8300](http://localhost:8300)
 
 As a result of this setup, 2 new files will be created in the [tilt](./tilt) directory:
 
