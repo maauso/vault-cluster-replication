@@ -13,7 +13,7 @@ func TestConfig_EnsureUniqueActiveNodes(t *testing.T) {
 		wantErr bool
 	}{
 		{
-			name: "EnsureUniqueActiveNodes: Valid",
+			name: "ensureUniqueActiveNodes: Valid",
 			fields: fields{
 				Replication: []ReplicationConfig{
 					{
@@ -29,16 +29,16 @@ func TestConfig_EnsureUniqueActiveNodes(t *testing.T) {
 			wantErr: false,
 		},
 		{
-			name: "EnsureUniqueActiveNodes: Error",
+			name: "ensureUniqueActiveNodes: Error",
 			fields: fields{
 				Replication: []ReplicationConfig{
 					{
-						Active: "cluster1",
-						SyncTo: []string{"cluster2"},
+						Active: "cluster5",
+						SyncTo: []string{"cluster6"},
 					},
 					{
-						Active: "cluster1",
-						SyncTo: []string{"cluster2", "cluster5"},
+						Active: "cluster5",
+						SyncTo: []string{"cluster6", "cluster7"},
 					},
 				},
 			},
@@ -47,12 +47,9 @@ func TestConfig_EnsureUniqueActiveNodes(t *testing.T) {
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			c := &Config{
-				Replication: tt.fields.Replication,
-				Credentials: tt.fields.Credentials,
-			}
-			if err := c.EnsureUniqueActiveNodes(); (err != nil) != tt.wantErr {
-				t.Errorf("EnsureUniqueActiveNodes() error = %v, wantErr %v", err, tt.wantErr)
+			c := NewConfig(tt.fields.Replication, tt.fields.Credentials)
+			if err := c.ensureUniqueActiveNodes(); (err != nil) != tt.wantErr {
+				t.Errorf("ensureUniqueActiveNodes() error = %v, wantErr %v", err, tt.wantErr)
 			}
 		})
 	}
@@ -69,7 +66,7 @@ func TestConfig_EnsureActiveNodeIsNotPassive(t *testing.T) {
 		wantErr bool
 	}{
 		{
-			name: "EnsureActiveNodeIsNotPassive: Valid",
+			name: "ensureActiveNodeIsNotPassive: Valid",
 			fields: fields{
 				Replication: []ReplicationConfig{
 					{
@@ -85,7 +82,7 @@ func TestConfig_EnsureActiveNodeIsNotPassive(t *testing.T) {
 			wantErr: false,
 		},
 		{
-			name: "EnsureActiveNodeIsNotPassive: Error",
+			name: "ensureActiveNodeIsNotPassive: Error",
 			fields: fields{
 				Replication: []ReplicationConfig{
 					{
@@ -107,8 +104,8 @@ func TestConfig_EnsureActiveNodeIsNotPassive(t *testing.T) {
 				Replication: tt.fields.Replication,
 				Credentials: tt.fields.Credentials,
 			}
-			if err := c.EnsureActiveNodeIsNotPassive(); (err != nil) != tt.wantErr {
-				t.Errorf("EnsureActiveNodeIsNotPassive() error = %v, wantErr %v", err, tt.wantErr)
+			if err := c.ensureActiveNodeIsNotPassive(); (err != nil) != tt.wantErr {
+				t.Errorf("ensureActiveNodeIsNotPassive() error = %v, wantErr %v", err, tt.wantErr)
 			}
 		})
 	}
@@ -125,7 +122,7 @@ func TestConfig_EnsureNotEmptySyncConfig(t *testing.T) {
 		wantErr bool
 	}{
 		{
-			name: "EnsureNotEmptySyncConfig: Valid",
+			name: "ensureNotEmptySyncConfig: Valid",
 			fields: fields{
 				Replication: []ReplicationConfig{
 					{
@@ -141,7 +138,7 @@ func TestConfig_EnsureNotEmptySyncConfig(t *testing.T) {
 			wantErr: false,
 		},
 		{
-			name: "EnsureNotEmptySyncConfig: Error",
+			name: "ensureNotEmptySyncConfig: Error",
 			fields: fields{
 				Replication: []ReplicationConfig{
 					{
@@ -157,7 +154,7 @@ func TestConfig_EnsureNotEmptySyncConfig(t *testing.T) {
 			wantErr: true,
 		},
 		{
-			name: "EnsureNotEmptySyncConfig: SyncTo is empty",
+			name: "ensureNotEmptySyncConfig: SyncTo is empty",
 			fields: fields{
 				Replication: []ReplicationConfig{
 					{
@@ -169,7 +166,7 @@ func TestConfig_EnsureNotEmptySyncConfig(t *testing.T) {
 			wantErr: true,
 		},
 		{
-			name: "EnsureNotEmptySyncConfig: Active is empty",
+			name: "ensureNotEmptySyncConfig: Active is empty",
 			fields: fields{
 				Replication: []ReplicationConfig{
 					{
@@ -181,7 +178,7 @@ func TestConfig_EnsureNotEmptySyncConfig(t *testing.T) {
 			wantErr: true,
 		},
 		{
-			name: "EnsureNotEmptySyncConfig: Replication is empty",
+			name: "ensureNotEmptySyncConfig: Replication is empty",
 			fields: fields{
 				Replication: []ReplicationConfig{},
 			},
@@ -194,8 +191,8 @@ func TestConfig_EnsureNotEmptySyncConfig(t *testing.T) {
 				Replication: tt.fields.Replication,
 				Credentials: tt.fields.Credentials,
 			}
-			if err := c.EnsureNotEmptySyncConfig(); (err != nil) != tt.wantErr {
-				t.Errorf("EnsureNotEmptySyncConfig() error = %v, wantErr %v", err, tt.wantErr)
+			if err := c.ensureNotEmptySyncConfig(); (err != nil) != tt.wantErr {
+				t.Errorf("ensureNotEmptySyncConfig() error = %v, wantErr %v", err, tt.wantErr)
 			}
 		})
 	}
@@ -212,7 +209,7 @@ func TestConfig_EnsureNotEmptyCredentials(t *testing.T) {
 		wantErr bool
 	}{
 		{
-			name: "EnsureNotEmptyCredentials: Valid",
+			name: "ensureNotEmptyCredentials: Valid",
 			fields: fields{
 				Replication: []ReplicationConfig{
 					{
@@ -255,7 +252,7 @@ func TestConfig_EnsureNotEmptyCredentials(t *testing.T) {
 			wantErr: false,
 		},
 		{
-			name: "EnsureNotEmptyCredentials: Error",
+			name: "ensureNotEmptyCredentials: Error",
 			fields: fields{
 				Replication: []ReplicationConfig{
 					{
@@ -298,7 +295,7 @@ func TestConfig_EnsureNotEmptyCredentials(t *testing.T) {
 			wantErr: true,
 		},
 		{
-			name: "EnsureNotEmptyCredentials: ClusterName Empty",
+			name: "ensureNotEmptyCredentials: ClusterName Empty",
 			fields: fields{
 				Replication: []ReplicationConfig{
 					{
@@ -317,7 +314,7 @@ func TestConfig_EnsureNotEmptyCredentials(t *testing.T) {
 			wantErr: true,
 		},
 		{
-			name: "EnsureNotEmptyCredentials: AppRole Empty",
+			name: "ensureNotEmptyCredentials: AppRole Empty",
 			fields: fields{
 				Replication: []ReplicationConfig{
 					{
@@ -336,7 +333,7 @@ func TestConfig_EnsureNotEmptyCredentials(t *testing.T) {
 			wantErr: true,
 		},
 		{
-			name: "EnsureNotEmptyCredentials: SecretID Empty",
+			name: "ensureNotEmptyCredentials: SecretID Empty",
 			fields: fields{
 				Replication: []ReplicationConfig{
 					{
@@ -361,8 +358,8 @@ func TestConfig_EnsureNotEmptyCredentials(t *testing.T) {
 				Replication: tt.fields.Replication,
 				Credentials: tt.fields.Credentials,
 			}
-			if err := c.EnsureNotEmptyCredentials(); (err != nil) != tt.wantErr {
-				t.Errorf("EnsureNotEmptyCredentials() error = %v, wantErr %v", err, tt.wantErr)
+			if err := c.ensureNotEmptyCredentials(); (err != nil) != tt.wantErr {
+				t.Errorf("ensureNotEmptyCredentials() error = %v, wantErr %v", err, tt.wantErr)
 			}
 		})
 	}

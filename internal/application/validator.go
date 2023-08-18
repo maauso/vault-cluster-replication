@@ -2,20 +2,21 @@ package application
 
 import "fmt"
 
+// ConfigValidator validates the given Config struct and returns an error if any validation fails.
 func ConfigValidator(cnf Config) error {
-	err := cnf.EnsureActiveNodeIsNotPassive()
+	err := cnf.ensureActiveNodeIsNotPassive()
 	if err != nil {
 		return err
 	}
-	err = cnf.EnsureNotEmptySyncConfig()
+	err = cnf.ensureNotEmptySyncConfig()
 	if err != nil {
 		return err
 	}
-	err = cnf.EnsureNotEmptyCredentials()
+	err = cnf.ensureNotEmptyCredentials()
 	if err != nil {
 		return err
 	}
-	err = cnf.EnsureNotEmptyCredentials()
+	err = cnf.ensureNotEmptyCredentials()
 	if err != nil {
 		return err
 	}
@@ -23,8 +24,8 @@ func ConfigValidator(cnf Config) error {
 	return nil
 }
 
-// EnsureUniqueActiveNodes check if there are any duplicate Active nodes array
-func (c *Config) EnsureUniqueActiveNodes() error {
+// ensureUniqueActiveNodes check if there are any duplicate Active nodes array.
+func (c *Config) ensureUniqueActiveNodes() error {
 	nameCount := make(map[string]int)
 	for _, syncConfig := range c.Replication {
 		nameCount[syncConfig.Active]++
@@ -32,11 +33,12 @@ func (c *Config) EnsureUniqueActiveNodes() error {
 			return fmt.Errorf("%s is duplicated in the SyncConfig array", syncConfig.Active)
 		}
 	}
+
 	return nil
 }
 
-// EnsureActiveNodeIsNotPassive check if there is an Active node that is also a Passive node
-func (c *Config) EnsureActiveNodeIsNotPassive() error {
+// ensureActiveNodeIsNotPassive check if there is an Active node that is also a Passive node.
+func (c *Config) ensureActiveNodeIsNotPassive() error {
 	activeSet := make(map[string]bool)
 	for _, syncConfig := range c.Replication {
 		activeSet[syncConfig.Active] = true
@@ -49,11 +51,12 @@ func (c *Config) EnsureActiveNodeIsNotPassive() error {
 			}
 		}
 	}
+
 	return nil
 }
 
-// EnsureNotEmptySyncConfig check if the SyncConfig array is empty
-func (c *Config) EnsureNotEmptySyncConfig() error {
+// ensureNotEmptySyncConfig check if the SyncConfig array is empty.
+func (c *Config) ensureNotEmptySyncConfig() error {
 	if len(c.Replication) == 0 {
 		return fmt.Errorf("SyncConfig array is empty")
 	}
@@ -70,11 +73,12 @@ func (c *Config) EnsureNotEmptySyncConfig() error {
 			}
 		}
 	}
+
 	return nil
 }
 
-// EnsureNotEmptyCredentials check if the credentials array is empty
-func (c *Config) EnsureNotEmptyCredentials() error {
+// ensureNotEmptyCredentials check if the credentials array is empty.
+func (c *Config) ensureNotEmptyCredentials() error {
 	if len(c.Credentials) == 0 {
 		return fmt.Errorf("credentials array is empty")
 	}
@@ -89,5 +93,6 @@ func (c *Config) EnsureNotEmptyCredentials() error {
 			return fmt.Errorf("cluster password is empty, cluster: %s", cluster.Name)
 		}
 	}
+
 	return nil
 }
