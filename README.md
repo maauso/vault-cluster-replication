@@ -1,4 +1,95 @@
-# (WIP) vault-cluster-replication
+# (WIP) Hashicorp Vault Cluster Replication Application (vault-cluster-replication)
+
+- [(WIP) Hashicorp Vault Cluster Replication Application (vault-cluster-replication)](#wip-hashicorp-vault-cluster-replication-application-vault-cluster-replication)
+  - [Introduction](#introduction)
+  - [Configuration](#configuration)
+    - [Replication Configuration](#replication-configuration)
+    - [Credentials Configuration](#credentials-configuration)
+    - [(WIP) - Usage](#wip---usage)
+  - [Test it locally](#test-it-locally)
+    - [Prerequisites](#prerequisites)
+    - [Setup](#setup)
+      - [Run Tilt:](#run-tilt)
+      - [Access Vault UI:](#access-vault-ui)
+
+
+## Introduction
+
+The Hashicorp Vault Cluster Replication Application allows you to replicate data between Hashicorp Vault clusters, ensuring consistency and availability across multiple instances. This is particularly useful in scenarios where high availability and disaster recovery are essential.
+
+Also in case of you want to have a replication between cloud providers or regions.
+
+## Configuration
+
+The application requires a configuration file in YAML format to define the replication and credentials settings. Below is an example configuration:
+
+```yaml
+
+replication:
+  - active: "http://vault-1-cluster:8200"
+    sync_to:
+      - "http://vault-2-cluster:8300"
+  - active: "http://vault-3-cluster:8300"
+    sync_to:
+      - "http://vault-4-cluster:8200"
+      - "http://vault-5-cluster:8200"
+credentials:
+  - name: "http://vault-1-cluster:8200"
+    appRole: "vaultClusterReplication"
+    secretID: "root"
+  - name: "http://vault-2-cluster:8200"
+    appRole: "vaultClusterReplication"
+    secretID: "root"
+  - name: "http://vault-3-cluster:8200"
+    appRole: "vaultClusterReplication"
+    secretID: "root"
+  - name: "http://vault-4-cluster:8200"
+    appRole: "vaultClusterReplication"
+    secretID: "root"
+  - name: "http://vault-5-cluster:8200"
+    appRole: "vaultClusterReplication"
+    secretID: "root"
+```
+
+### Replication Configuration
+
+The replication configuration section allows you to specify the replication relationships between Vault clusters. Each entry consists of:
+
+- **active**: The URL of the source Vault cluster.
+- **sync_to**: A list of destination Vault clusters to which data will be replicated.
+
+You can define multiple replication configurations to manage different replication scenarios.
+
+### Credentials Configuration
+
+In the credentials configuration section, you define the authentication credentials for each Vault cluster. Each set of credentials includes:
+
+- **name**: The URL of the Vault cluster associated with these credentials.
+- **appRole**: The AppRole used for authentication.
+- **secretID**: The secret ID associated with the AppRole.
+
+These credentials are used to authenticate and establish connections between clusters for data replication.
+
+AppRole needs to have a policy that allows the following operations:
+
+```hcl
+path "sys/mounts" {
+  capabilities = ["read", "list"]
+}
+path "sys/policies/acl/*" {
+  capabilities = ["read"]
+}
+path "sys/storage/raft/snapshot*" {
+  capabilities = ["create", "update", "read"]
+}
+path "sys/raft/snapshots/*/restore" {
+  capabilities = ["update"]
+}
+```
+
+For enhanced security, consider using Kubernetes Secrets to store the configuration and credentials for the Hashicorp Vault Cluster Replication Application. Kubernetes Secrets allow you to store sensitive information in a secure manner, separate from your application code.
+
+### (WIP) - Usage
 
 ## Test it locally
 
@@ -58,7 +149,3 @@ As a result of this setup, 2 new files will be created in the [tilt](./tilt) dir
 - `vault-2_unseal_keys.json`
 
 They will contain the unseal and root tokens for each Vault cluster. You can use these tokens to access the Vault UIs.
-
-
-
-
