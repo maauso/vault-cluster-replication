@@ -1,24 +1,28 @@
 package storage
 
 import (
+	"context"
 	"net/http"
 	"time"
 
 	"github.com/hashicorp/vault/api"
+	auth "github.com/hashicorp/vault/api/auth/approle"
 )
 
 const timeoutSeconds = 3600
 
-type Login interface {
-	NewSysClientConnection(vaultAddr, appRoleID, appSecretID string) (Syncer, error)
-}
-
 type Client struct {
-	Login
+	Logical Logical
+	Sys     Sys
+	Auth    Auth
 }
 
-// NewSysClientConnection new Vault client, authenticates with the AppRole, and returns a new Vault storage client.
-func (c *Client) NewSysClientConnection(vaultAddr, appRoleID, appSecretID string) (Syncer, error) {
+func NewClient(logical Logical, sys Sys, auth Auth) Client {
+	return Client{Logical: logical, Sys: sys, Auth: auth}
+}
+
+// ClientConfig new Vault client, authenticates with the AppRole, and returns a new Vault storage client.
+func ClientConfig(vaultAddr string) (*api.Client, error) {
 	httpClient := &http.Client{
 		Timeout: timeoutSeconds * time.Second,
 	}
@@ -33,16 +37,19 @@ func (c *Client) NewSysClientConnection(vaultAddr, appRoleID, appSecretID string
 		return nil, err
 	}
 
-	resp, err := client.Logical().Write("auth/approle/login", map[string]interface{}{
-		"role_id":   appRoleID,
-		"secret_id": appSecretID,
-	})
+	return client, nil
+}
+
+func ClientLogin(client Client, appRoleID string, appSecretID string) (Client, error) {
+	secretID := &auth.SecretID{FromString: appSecretID}
+	appRoleAuth, err := auth.NewAppRoleAuth(appRoleID, secretID)
 	if err != nil {
-		return nil, err
+		return Client{}, err
 	}
-	client.SetToken(resp.Auth.ClientToken)
+	_, err = client.Auth.Login(context.TODO(), appRoleAuth)
+	if err != nil {
+		return Client{}, err
+	}
 
-	sysClient := NewSystemClient(client.Sys())
-
-	return sysClient, nil
+	return client, nil
 }
