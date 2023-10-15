@@ -17,7 +17,7 @@ type Client struct {
 	Login
 }
 
-// It creates a new Vault client, authenticates with the AppRole, and returns a new Vault storage client.
+// NewSysClientConnection new Vault client, authenticates with the AppRole, and returns a new Vault storage client.
 func (c *Client) NewSysClientConnection(vaultAddr, appRoleID, appSecretID string) (Syncer, error) {
 	httpClient := &http.Client{
 		Timeout: timeoutSeconds * time.Second,
