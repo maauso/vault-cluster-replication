@@ -46,6 +46,7 @@ jobs:
     steps:
       - uses: actions/checkout@v2
       - name: markdownlint
-        uses: markdownlint/markdownlint-action@v0.6.0
+        uses: articulate/actions-markdownlint@v1
         with:
-          config: .markdownlint.yml
+          config: .markdownlint.yaml
+          files: '**/*.md'
