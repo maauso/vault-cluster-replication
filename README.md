@@ -59,7 +59,6 @@ credentials:
     secretID: "root"
 ```
 
-
 ### Replication Configuration
 
 The replication configuration section allows you to specify the replication relationships between Vault clusters. Each entry consists of:

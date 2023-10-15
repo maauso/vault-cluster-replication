@@ -19,8 +19,7 @@ func NewClusterCredential(clusterName string, connection storage.Syncer) Cluster
 type ClusterCredentials []ClusterCredential
 
 // generateClustersConfigs generates a list of ClusterCredentials based on the provided Config.
-// It creates a Vault client configuration for each credential, retrieves a cluster token, and creates a new ClusterCredential
-// with the retrieved token and credential name.
+// It creates a Vault client configuration for each credential cluster
 // Returns a list of ClusterCredentials and an error if any.
 func generateClustersConfigs(config Config) (ClusterCredentials, error) {
 	credentials := ClusterCredentials{}
