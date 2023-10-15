@@ -5,7 +5,7 @@ import (
 )
 
 func Run(config Config) error {
-	credentials, err := getClustersToken(config, storage.Client{})
+	credentials, err := getClustersConfigs(config)
 	if err != nil {
 		return err
 	}

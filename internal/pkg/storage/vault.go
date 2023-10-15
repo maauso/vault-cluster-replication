@@ -1,13 +1,12 @@
 // Package storage provides an interface for backup and restore of a secret backend.
-// It contains a System struct that contains the client for the secret backend.
-// The System struct implements the Syncer interface, which provides methods for pulling and pushing snapshots.
-// The System struct also contains the SYS interface, which provides methods for creating and restoring snapshots.
+// It contains a syncerClient struct that contains the client for the secret backend.
+// The syncerClient struct implements the Syncer interface, which provides methods for pulling and pushing snapshots.
+// The syncerClient struct also contains the Sys interface, which provides methods for creating and restoring snapshots.
 package storage
 
 import (
 	"bytes"
 	"fmt"
-	"io"
 	"os"
 	"time"
 
@@ -17,28 +16,19 @@ import (
 const filePermission = 0o600
 
 // Syncer is an interface that provides methods for pulling and pushing snapshots.
+//
+//go:generate mockery --name Syncer
 type Syncer interface {
 	PullSnapshot() (string, error)
 	PushSnapshot(fileName string) error
 }
 
-// SYS is an interface that provides methods for creating and restoring snapshots.
-//
-//go:generate mockery --name Syncer
-type SYS interface {
-	RaftSnapshot(snapWriter io.Writer) error
-	RaftSnapshotRestore(snapReader io.Reader, force bool) error
-}
-
 // System is the struct that contains the client for the secret backend.
-//
-//go:generate mockery --name SYS
 type System struct {
-	Sys SYS
+	Sys Sys
 }
 
-// NewSystemClient returns a new System struct with the provided SYS interface.
-func NewSystemClient(sys SYS) *System {
+func NewSystem(sys Sys) *System {
 	return &System{Sys: sys}
 }
 
@@ -53,7 +43,7 @@ func (s System) PullSnapshot() (string, error) {
 		return "", fmt.Errorf("unable to generate snapshot, %s", err.Error())
 	}
 	logs.Logger.Info("writing snapshot locally in " + backupFile)
-	err = os.WriteFile(backupFile, snapshot.Bytes(), filePermission)
+	err = writerFile(backupFile, snapshot.Bytes())
 	if err != nil {
 		return "", fmt.Errorf("unable to write snapshot to file, %s", err.Error())
 	}
@@ -64,7 +54,7 @@ func (s System) PullSnapshot() (string, error) {
 
 // PushSnapshot reads a snapshot from a file and restores it.
 func (s System) PushSnapshot(backupFileName string) error {
-	snapshot, err := os.Open(backupFileName)
+	snapshot, err := openFile(backupFileName)
 	if err != nil {
 		return fmt.Errorf("unable to open snapshot file, %s", err.Error())
 	}
@@ -76,4 +66,22 @@ func (s System) PushSnapshot(backupFileName string) error {
 	logs.Logger.Info("snapshot restored successfully")
 
 	return nil
+}
+
+func writerFile(backupFile string, snapshot []byte) error {
+	err := os.WriteFile(backupFile, snapshot, filePermission)
+	if err != nil {
+		return err
+	}
+
+	return nil
+}
+
+func openFile(backupFileName string) (*os.File, error) {
+	snapshot, err := os.Open(backupFileName)
+	if err != nil {
+		return nil, err
+	}
+
+	return snapshot, nil
 }

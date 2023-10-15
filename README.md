@@ -103,11 +103,18 @@ For enhanced security, consider using Kubernetes Secrets to store the configurat
 The test environment is based on Tilt.
 The tilt fins can be found in the [tilt](./tilt) directory.
 
+#### Create a KinD cluster
+
+```bash
+kind create cluster
+```
+
 #### Run Tilt
 
 Run the following command in the terminal to start Tilt:
 
 ```bash
+cd tilt/
 tilt up
 ```
 
