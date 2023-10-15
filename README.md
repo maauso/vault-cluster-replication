@@ -2,6 +2,7 @@
 
 - [Vault Replication Application (vault-cluster-replication)](#vault-replication-application-vault-cluster-replication)
   - [Introduction](#introduction)
+  - [Schema](#schema)
   - [Configuration](#configuration)
     - [Replication Configuration](#replication-configuration)
     - [Credentials Configuration](#credentials-configuration)
@@ -9,6 +10,7 @@
   - [Test it locally](#test-it-locally)
     - [Prerequisites](#prerequisites)
     - [Setup](#setup)
+      - [Create a KinD cluster](#create-a-kind-cluster)
       - [Run Tilt](#run-tilt)
       - [Access Vault UI](#access-vault-ui)
 
@@ -18,9 +20,16 @@ The Hashicorp Vault Cluster Replication Application allows you to replicate data
 
 Also in case of you want to have a replication between cloud providers or regions.
 
+## Schema
+
+![Vault Cluster Replication](./assets/schema.png)
+
 ## Configuration
 
-The application requires a configuration file in YAML format to define the replication and credentials settings. Below is an example configuration:
+The application requires a configuration file in YAML format to define the replication and credentials settings.
+This file need to be rechable for the application seting the environment variable `CONFIG_FILE_PATH`.
+
+Below is an example configuration:
 
 ```yaml
 
@@ -49,6 +58,7 @@ credentials:
     appRole: "vaultClusterReplication"
     secretID: "root"
 ```
+
 
 ### Replication Configuration
 

@@ -45,6 +45,5 @@ func ParseConfigFile(filePath string) (Config, error) {
 	if err != nil {
 		return Config{}, fmt.Errorf("error unmarshaling YAML data: %w", err)
 	}
-
 	return config, nil
 }

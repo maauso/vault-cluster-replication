@@ -40,7 +40,10 @@ func ClientConfig(vaultAddr string) (*api.Client, error) {
 	return client, nil
 }
 
-func ClientLogin(client Client, appRoleID string, appSecretID string) (Client, error) {
+// ClientAppRoleAuthentication authenticates the client using the AppRole authentication method.
+// It takes a client, an appRoleID string and an appSecretID string as input parameters.
+// It returns the authenticated client and an error if any.
+func ClientAppRoleAuthentication(client Client, appRoleID string, appSecretID string) (Client, error) {
 	secretID := &auth.SecretID{FromString: appSecretID}
 	appRoleAuth, err := auth.NewAppRoleAuth(appRoleID, secretID)
 	if err != nil {

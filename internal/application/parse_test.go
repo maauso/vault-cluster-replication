@@ -5,7 +5,7 @@ import (
 	"testing"
 )
 
-func TestParseConfigFile(t *testing.T) {
+func TestParseConfigFile_OK(t *testing.T) {
 	t.Parallel()
 	filePath := "../../tests/test-config.yaml" // Create a test YAML file with sample content for testing
 
@@ -56,5 +56,25 @@ func TestParseConfigFile(t *testing.T) {
 
 	if !reflect.DeepEqual(config, expectedConfig) {
 		t.Errorf("Parsed config does not match expected:\nExpected: %+v\nGot: %+v", expectedConfig, config)
+	}
+}
+
+func TestParseConfigFile_Error_FileNotExist(t *testing.T) {
+	t.Parallel()
+	filePath := ""
+
+	_, err := ParseConfigFile(filePath)
+	if err == nil {
+		t.Errorf("Expected error parsing config file, got nil")
+	}
+}
+
+func TestParseConfigFile_Error_InvalidYAML(t *testing.T) {
+	t.Parallel()
+	filePath := "../../tests/test-config-invalid.yaml" // Create a test YAML file with sample content for testing
+
+	_, err := ParseConfigFile(filePath)
+	if err == nil {
+		t.Errorf("Expected error parsing config file, got nil")
 	}
 }

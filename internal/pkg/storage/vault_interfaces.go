@@ -8,7 +8,6 @@ import (
 )
 
 // Sys is an interface that provides methods for creating and restoring snapshots.
-//
 //go:generate mockery --name Sys
 type Sys interface {
 	RaftSnapshot(snapWriter io.Writer) error

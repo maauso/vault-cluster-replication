@@ -6,9 +6,10 @@ package storage
 
 import (
 	"bytes"
+	"crypto/rand"
+	"encoding/base64"
 	"fmt"
 	"os"
-	"time"
 
 	"vault-cluster-replication/internal/pkg/logs"
 )
@@ -23,7 +24,6 @@ type Syncer interface {
 	PushSnapshot(fileName string) error
 }
 
-// System is the struct that contains the client for the secret backend.
 type System struct {
 	Sys Sys
 }
@@ -35,10 +35,16 @@ func NewSystem(sys Sys) *System {
 // PullSnapshot generates a snapshot and writes it to a file.
 // It returns the name of the file where the snapshot was written.
 func (s System) PullSnapshot() (string, error) {
-	backupFile := fmt.Sprintf("%d", time.Now().UnixNano())
+	// Generate a unique identifier for the snapshot file name
+	identifier := make([]byte, 16)
+	_, err := rand.Read(identifier)
+	if err != nil {
+		return "", fmt.Errorf("unable to generate snapshot identifier, %s", err.Error())
+	}
+	backupFile := base64.RawURLEncoding.EncodeToString(identifier)
 	// Create io.Writer to write the snapshot to a file
 	var snapshot bytes.Buffer
-	err := s.Sys.RaftSnapshot(&snapshot)
+	err = s.Sys.RaftSnapshot(&snapshot)
 	if err != nil {
 		return "", fmt.Errorf("unable to generate snapshot, %s", err.Error())
 	}
@@ -58,6 +64,7 @@ func (s System) PushSnapshot(backupFileName string) error {
 	if err != nil {
 		return fmt.Errorf("unable to open snapshot file, %s", err.Error())
 	}
+	defer snapshot.Close()
 	logs.Logger.Info("restoring snapshot from file: " + backupFileName)
 	err = s.Sys.RaftSnapshotRestore(snapshot, true)
 	if err != nil {

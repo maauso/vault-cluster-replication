@@ -10,12 +10,12 @@ import (
 )
 
 type Config struct {
-	ConfigPath string `envconfig:"default=configs/default-conf.yaml"`
+	ConfigFilePath string `envconfig:"default=configs/default-conf.yaml"`
 }
 
 func main() {
 	cnf := parseConfig()
-	applicationConfig, err := application.ParseConfigFile(cnf.ConfigPath)
+	applicationConfig, err := application.ParseConfigFile(cnf.ConfigFilePath)
 	if err != nil {
 		logs.Logger.Error(err, "error parsing config file")
 		os.Exit(1)
