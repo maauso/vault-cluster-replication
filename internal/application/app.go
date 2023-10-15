@@ -5,7 +5,7 @@ import (
 )
 
 func Run(config Config) error {
-	credentials, err := getClustersConfigs(config)
+	credentials, err := generateClustersConfigs(config)
 	if err != nil {
 		return err
 	}
@@ -20,13 +20,13 @@ func Run(config Config) error {
 
 func replicator(config Config, credentials ClusterCredentials) error {
 	for _, replication := range config.Replication {
-		sync := getClusterCredentials(replication.Active, credentials)
+		sync := retrieveClusterCredentials(replication.Active, credentials)
 		backup, err := sync.PullSnapshot()
 		if err != nil {
 			return err
 		}
 		for _, syncTo := range replication.SyncTo {
-			syncToCluster := getClusterCredentials(syncTo, credentials)
+			syncToCluster := retrieveClusterCredentials(syncTo, credentials)
 			err := syncToCluster.PushSnapshot(backup)
 			if err != nil {
 				return err
@@ -37,7 +37,7 @@ func replicator(config Config, credentials ClusterCredentials) error {
 	return nil
 }
 
-func getClusterCredentials(clusterURL string, credentials ClusterCredentials) storage.Syncer {
+func retrieveClusterCredentials(clusterURL string, credentials ClusterCredentials) storage.Syncer {
 	for _, credential := range credentials {
 		if credential.ClusterName == clusterURL {
 			connectionCredentials := credential.Connection

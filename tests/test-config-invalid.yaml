@@ -1,0 +1,9 @@
+---
+repli:
+  - active: cluster1
+    sync_to:
+      - cluster2
+  - active: cluster3
+    sync_to:
+      - cluster4
+      - cluster5

@@ -18,10 +18,13 @@ func NewClusterCredential(clusterName string, connection storage.Syncer) Cluster
 
 type ClusterCredentials []ClusterCredential
 
-func getClustersConfigs(config Config) (ClusterCredentials, error) {
+// generateClustersConfigs generates a list of ClusterCredentials based on the provided Config.
+// It creates a Vault client configuration for each credential cluster
+// Returns a list of ClusterCredentials and an error if any.
+func generateClustersConfigs(config Config) (ClusterCredentials, error) {
 	credentials := ClusterCredentials{}
 	for _, cred := range config.Credentials {
-		clientConfig, err := getStorageClientConfig(cred.Name)
+		clientConfig, err := createVaultClientConfig(cred.Name)
 		if err != nil {
 			return nil, err
 		}
@@ -43,7 +46,7 @@ func getClustersConfigs(config Config) (ClusterCredentials, error) {
 	return credentials, nil
 }
 
-func getStorageClientConfig(storageAddr string) (*api.Client, error) {
+func createVaultClientConfig(storageAddr string) (*api.Client, error) {
 	storageClientConfig, err := storage.ClientConfig(storageAddr)
 	if err != nil {
 		return nil, err
@@ -54,7 +57,7 @@ func getStorageClientConfig(storageAddr string) (*api.Client, error) {
 
 func getClusterToken(clientConfig *api.Client, appRoleID string, appSecretID string) (storage.Client, error) {
 	vaultClient := storage.NewClient(clientConfig.Logical(), clientConfig.Sys(), clientConfig.Auth())
-	client, err := storage.ClientLogin(vaultClient, appRoleID, appSecretID)
+	client, err := storage.ClientAppRoleAuthentication(vaultClient, appRoleID, appSecretID)
 	if err != nil {
 		return storage.Client{}, err
 	}
