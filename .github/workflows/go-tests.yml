@@ -1,14 +1,11 @@
 name: go-tests
 on:
-  push:
-    branches:
-      - main
   pull_request:
 
 permissions:
   contents: read
 jobs:
-  test:
+  Tests:
     strategy:
       matrix:
         go-version: [ 1.20.x ]
@@ -22,4 +19,13 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v2
       - name: go-tests
-        run: go test ./...
+        run: go test ./... -v
+  Gosec:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Source
+        uses: actions/checkout@v3
+      - name: Run Gosec Security Scanner
+        uses: securego/gosec@master
+        with:
+          args: ./...

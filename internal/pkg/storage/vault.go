@@ -10,6 +10,7 @@ import (
 	"encoding/base64"
 	"fmt"
 	"os"
+	"path/filepath"
 
 	"vault-cluster-replication/internal/pkg/logs"
 )
@@ -60,7 +61,7 @@ func (s System) PullSnapshot() (string, error) {
 
 // PushSnapshot reads a snapshot from a file and restores it.
 func (s System) PushSnapshot(backupFileName string) error {
-	snapshot, err := openFile(backupFileName)
+	snapshot, err := openFile(filepath.Clean(backupFileName))
 	if err != nil {
 		return fmt.Errorf("unable to open snapshot file, %s", err.Error())
 	}
@@ -85,7 +86,7 @@ func writerFile(backupFile string, snapshot []byte) error {
 }
 
 func openFile(backupFileName string) (*os.File, error) {
-	snapshot, err := os.Open(backupFileName)
+	snapshot, err := os.Open(filepath.Clean(backupFileName))
 	if err != nil {
 		return nil, err
 	}

@@ -3,6 +3,7 @@ package application
 import (
 	"fmt"
 	"os"
+	"path/filepath"
 
 	"gopkg.in/yaml.v3"
 )
@@ -32,7 +33,7 @@ func NewConfig(replication []ReplicationConfig, credentials []Credential) Config
 
 func ParseConfigFile(filePath string) (Config, error) {
 	// Read YAML file
-	yamlFile, err := os.ReadFile(filePath)
+	yamlFile, err := os.ReadFile(filepath.Clean(filePath))
 	if err != nil {
 		return Config{}, fmt.Errorf("error reading YAML file: %w", err)
 	}
