@@ -16,7 +16,7 @@
 
 ## Introduction
 
-The Hashicorp Vault Cluster Replication Application allows you to replicate data between Hashicorp Vault clusters, ensuring consistency and availability across multiple instances. This is particularly useful in scenarios where high availability and disaster recovery are essential.
+Vault Cluster Replication Application allows you to replicate data between Hashicorp Vault clusters, ensuring consistency and availability across multiple instances. This is particularly useful in scenarios where high availability and disaster recovery are essential.
 
 Also in case of you want to have a replication between cloud providers or regions.
 
