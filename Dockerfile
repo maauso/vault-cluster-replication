@@ -5,8 +5,8 @@ WORKDIR /go/src/app
 COPY . .
 
 # Download dependencies and build the application
-RUN go mod download
-RUN go build -o vault-cluster-replication ./cmd/main.go
+RUN go mod download \
+    && go build -o vault-cluster-replication ./cmd/main.go
 
 FROM golang:1.20-alpine
 
@@ -15,8 +15,8 @@ COPY --from=builder /go/src/app/vault-cluster-replication /app/vault-cluster-rep
 
 # Create a group and user
 
-RUN addgroup -S vcr && adduser -S vcr -G vcr
-RUN chown -R vcr:vcr /app
+RUN addgroup -S vcr && adduser -S vcr -G vcr \
+    && chown -R vcr:vcr /app
 USER vcr
 
 # Set the working directory and entry point
