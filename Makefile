@@ -1,3 +1,10 @@
+
+GOARCH ?= amd64
+GOOS ?= linux
+DOCKER_IMAGE ?= vault-cluster-replication
+
+
+
 # Go application name
 APP_NAME = vault-cluster-replication
 
@@ -13,7 +20,7 @@ LINT_IMAGE = golangci/golangci-lint:v1.53-alpine
 # Go Docker image for building
 GO_IMAGE = golang:1.20-bookworm
 
-.PHONY: all test lint build
+.PHONY: all test lint build build-docker-image
 
 all: test lint build
 
@@ -28,5 +35,12 @@ lint:
 
 clean:
 	@rm -f $(COVERAGE_BINARY)
+
+
+build-docker-image:
+	@docker build --build-arg GOARCH=$(GOARCH) -f ./Dockerfile -t $(DOCKER_IMAGE) .
+
+build:
+	@GOARCH=$(GOARCH) GOOS=$(GOOS) go build -o dist/$(GOARCH)/bin/vault-cluster-replication ./cmd/server/main.go
 
 .PHONY: clean
