@@ -30,6 +30,7 @@ linters:
   disable:
     - wsl
     - scopelint
+    - gochecknoglobals
     - gochecknoinits
     - interfacer
     - maligned

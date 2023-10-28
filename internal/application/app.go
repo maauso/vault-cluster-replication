@@ -4,13 +4,18 @@ import (
 	"vault-cluster-replication/internal/pkg/storage"
 )
 
+var (
+	replicateFunc              = performReplication
+	generateClusterConfigsFunc = generateClustersConfigs
+)
+
 func Run(config Config) error {
-	credentials, err := generateClustersConfigs(config)
+	credentials, err := generateClusterConfigsFunc(config)
 	if err != nil {
 		return err
 	}
 
-	err = replicator(config, credentials)
+	err = replicateFunc(config, credentials)
 	if err != nil {
 		return err
 	}
@@ -18,7 +23,7 @@ func Run(config Config) error {
 	return nil
 }
 
-func replicator(config Config, credentials ClusterCredentials) error {
+func performReplication(config Config, credentials ClusterCredentials) error {
 	for _, replication := range config.Replication {
 		sync := retrieveClusterCredentials(replication.Active, credentials)
 		backup, err := sync.PullSnapshot()

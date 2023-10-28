@@ -47,7 +47,7 @@ func generateClustersConfigs(config Config) (ClusterCredentials, error) {
 }
 
 func createVaultClientConfig(storageAddr string) (*api.Client, error) {
-	storageClientConfig, err := storage.ClientConfig(storageAddr)
+	storageClientConfig, err := storage.NewConfiguredVaultClient(storageAddr)
 	if err != nil {
 		return nil, err
 	}
@@ -57,7 +57,7 @@ func createVaultClientConfig(storageAddr string) (*api.Client, error) {
 
 func getClusterToken(clientConfig *api.Client, appRoleID string, appSecretID string) (storage.Client, error) {
 	vaultClient := storage.NewClient(clientConfig.Logical(), clientConfig.Sys(), clientConfig.Auth())
-	client, err := storage.ClientAppRoleAuthentication(vaultClient, appRoleID, appSecretID)
+	client, err := storage.AuthenticateWithAppRole(vaultClient, appRoleID, appSecretID)
 	if err != nil {
 		return storage.Client{}, err
 	}

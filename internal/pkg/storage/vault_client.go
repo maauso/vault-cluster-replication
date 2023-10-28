@@ -21,8 +21,8 @@ func NewClient(logical Logical, sys Sys, auth Auth) Client {
 	return Client{Logical: logical, Sys: sys, Auth: auth}
 }
 
-// ClientConfig new Vault client, authenticates with the AppRole, and returns a new Vault storage client.
-func ClientConfig(vaultAddr string) (*api.Client, error) {
+// NewConfiguredVaultClient new Vault client, authenticates with the AppRole, and returns a new Vault storage client.
+func NewConfiguredVaultClient(vaultAddr string) (*api.Client, error) {
 	httpClient := &http.Client{
 		Timeout: timeoutSeconds * time.Second,
 	}
@@ -40,10 +40,10 @@ func ClientConfig(vaultAddr string) (*api.Client, error) {
 	return client, nil
 }
 
-// ClientAppRoleAuthentication authenticates the client using the AppRole authentication method.
+// AuthenticateWithAppRole authenticates the client using the AppRole authentication method.
 // It takes a client, an appRoleID string and an appSecretID string as input parameters.
 // It returns the authenticated client and an error if any.
-func ClientAppRoleAuthentication(client Client, appRoleID string, appSecretID string) (Client, error) {
+func AuthenticateWithAppRole(client Client, appRoleID string, appSecretID string) (Client, error) {
 	secretID := &auth.SecretID{FromString: appSecretID}
 	appRoleAuth, err := auth.NewAppRoleAuth(appRoleID, secretID)
 	if err != nil {
