@@ -1,9 +1,10 @@
 package application
 
 import (
-	"github.com/stretchr/testify/assert"
 	"reflect"
 	"testing"
+
+	"github.com/stretchr/testify/assert"
 )
 
 func TestParseConfigFile_OK(t *testing.T) {
@@ -144,7 +145,7 @@ func TestNewConfig(t *testing.T) {
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			assert.Equalf(t, tt.want, NewConfig(tt.args.replication, tt.args.credentials), "NewConfig(%v, %v)", tt.args.replication, tt.args.credentials)
+			assert.Equalf(t, tt.want, NewConfig(tt.args.replication, tt.args.credentials), "NewConfig(%v, %v)", tt.args.replication, tt.args.credentials) //nolint:lll
 		})
 	}
 }

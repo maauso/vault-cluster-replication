@@ -223,7 +223,6 @@ func TestRun(t *testing.T) {
 	if err != nil {
 		t.Errorf("Expected no error, but got: %v", err)
 	}
-
 }
 
 func TestRun_generateConfigs_Error(t *testing.T) {

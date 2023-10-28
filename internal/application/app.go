@@ -38,6 +38,7 @@ func performReplication(config Config, credentials ClusterCredentials) error {
 			}
 		}
 	}
+
 	return nil
 }
 
