@@ -28,13 +28,13 @@ Also in case of you want to have a replication between cloud providers or region
 
 The application requires the following configuration to be set in Vault:
 
-- Auto-unseal(https://www.vaultproject.io/docs/concepts/seal#auto-unseal)
-- Raft storage(https://www.vaultproject.io/docs/configuration/storage/raft)
+- [Auto-unseal](https://www.vaultproject.io/docs/concepts/seal#auto-unseal)
+- [Raft storage](https://www.vaultproject.io/docs/configuration/storage/raft)
 
 ## Configuration
 
 The application requires a configuration file in YAML format to define the replication and credentials settings.
-This file need to be rechable for the application seting the environment variable `CONFIG_FILE_PATH`.
+This file need to be reachable for the application settings the environment variable `CONFIG_FILE_PATH`.
 
 Below is an example configuration:
 
