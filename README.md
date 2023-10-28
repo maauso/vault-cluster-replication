@@ -24,6 +24,13 @@ Also in case of you want to have a replication between cloud providers or region
 
 ![Vault Cluster Replication](./assets/schema.png)
 
+## Vault Configuration
+
+The application requires the following configuration to be set in Vault:
+
+- Auto-unseal(https://www.vaultproject.io/docs/concepts/seal#auto-unseal)
+- Raft storage(https://www.vaultproject.io/docs/configuration/storage/raft)
+
 ## Configuration
 
 The application requires a configuration file in YAML format to define the replication and credentials settings.
