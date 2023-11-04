@@ -28,8 +28,9 @@ Also in case of you want to have a replication between cloud providers or region
 
 The application requires the following configuration to be set in Vault:
 
-- [Auto-unseal](https://www.vaultproject.io/docs/concepts/seal#auto-unseal)
-- [Raft storage](https://www.vaultproject.io/docs/configuration/storage/raft)
+- (Mandatory) [Raft storage](https://www.vaultproject.io/docs/configuration/storage/raft)
+- (Recommended) [Auto-unseal](https://www.vaultproject.io/docs/concepts/seal#auto-unseal)
+  - In case auto-unseal is not used, manual unsealing is required **only during the first synchronization**, as the unseal keys will be synced to secondary clusters. After that, synchronization will work automatically.
 
 ## Configuration
 
@@ -144,15 +145,15 @@ Here's a step-by-step breakdown of the process:
 
 1. Tilt will initiate the deployment of the `vault-1` cluster. At this point, your manual intervention is needed. You
    should perform the following steps:
+   - Execute the `vault-1-operator-init.sh` script via the Tilt UI to set everything in motion.
    - Unseal the `vault-1` cluster.
    - Create an `appRole` tailored for the application.
-   - Execute the `vault-1-operator-init.sh` script via the Tilt UI to set everything in motion.
 
 2. Following the successful deployment of `vault-1`, Tilt will proceed to set up the `vault-2` cluster. Similarly, this
    phase requires your input:
+   - Initiate the `vault-2-operator-init.sh` script through the Tilt UI.
    - Unseal the `vault-2` cluster.
    - Establish the corresponding `appRole` configuration for the application.
-   - Initiate the `vault-2-operator-init.sh` script through the Tilt UI.
 
 By following these steps, you'll ensure the proper unsealing of both Vault clusters and the creation of
 application-specific `appRole` configurations. Tilt streamlines the deployment process, while your manual involvement
