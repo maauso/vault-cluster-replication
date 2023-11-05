@@ -1,6 +1,12 @@
-# Vault Replication Application (vault-cluster-replication)
+# Vault Cluster Replication (vault-cluster-replication)
 
-- [Vault Replication Application (vault-cluster-replication)](#vault-replication-application-vault-cluster-replication)
+<p align="center">
+  <a href='http://makeapullrequest.com'>
+    <img alt='PRs Welcome' src='https://img.shields.io/badge/PRs-welcome-brightgreen.svg?style=shields'/>
+  </a>
+</p>
+
+- [Vault Cluster Replication (vault-cluster-replication)](#vault-cluster-replication-vault-cluster-replication)
   - [Introduction](#introduction)
   - [Schema](#schema)
   - [Vault Configuration](#vault-configuration)
