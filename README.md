@@ -3,11 +3,13 @@
 - [Vault Replication Application (vault-cluster-replication)](#vault-replication-application-vault-cluster-replication)
   - [Introduction](#introduction)
   - [Schema](#schema)
+  - [Vault Configuration](#vault-configuration)
   - [Configuration](#configuration)
+    - [Environment Variables](#environment-variables)
     - [Replication Configuration](#replication-configuration)
     - [Credentials Configuration](#credentials-configuration)
     - [(WIP) - Usage](#wip---usage)
-  - [Test it locally](#test-it-locally)
+  - [Run vault-cluster-replication locally](#run-vault-cluster-replication-locally)
     - [Prerequisites](#prerequisites)
     - [Setup](#setup)
       - [Create a KinD cluster](#create-a-kind-cluster)
@@ -34,13 +36,19 @@ The application requires the following configuration to be set in Vault:
 
 ## Configuration
 
-The application requires a configuration file in YAML format to define the replication and credentials settings.
-This file need to be reachable for the application settings the environment variable `CONFIG_FILE_PATH`.
+### Environment Variables
 
-Below is an example configuration:
+The application requires the following environment variables to be set:
+
+- `CONFIG_FILE_PATH`: The path to the configuration file.
+- `SCHEDULED_EXECUTION_INTERVAL`: The interval at which the synchronization process is executed. The default value
+  is `5m`. Values must be `s` (seconds), `m` (minutes), `h` (hours)
+  - Example: `10s` (10 seconds), `5m` (5 minutes), `1h30m` (1 hour and 30 minutes)
+
+Below is an example `CONFIG_FILE_PATH` configuration:
 
 ```yaml
-
+---
 replication:
   - active: "http://vault-1-cluster:8200"
     sync_to:
@@ -107,13 +115,20 @@ For enhanced security, consider using Kubernetes Secrets to store the configurat
 
 ### (WIP) - Usage
 
-## Test it locally
+## Run vault-cluster-replication locally
 
 ### Prerequisites
 
 - [Tilt](https://tilt.dev/)
+  - Tilt is a development tool that helps streamline the inner development loop.
 - [Docker](https://www.docker.com/)
+  - Docker is a containerization platform that allows you to package applications and their dependencies into lightweight containers
 - [kind](https://kind.sigs.k8s.io/)
+  - kind, short for "Kubernetes in Docker," is a tool for running local Kubernetes clusters using Docker containers as nodes
+- [kubectl](https://kubernetes.io/docs/tasks/tools/install-kubectl/)
+  - kubectl is the official command-line tool for interacting with Kubernetes clusters.
+- [helm](https://helm.sh/docs/intro/install/)
+  - Helm is a package manager for Kubernetes that simplifies the deployment and management of complex applications
 
 ### Setup
 
@@ -132,11 +147,11 @@ Run the following command in the terminal to start Tilt:
 
 ```bash
 cd tilt/
-tilt up
+./tilt up
 ```
 
 Tilt will orchestrate the creation of two Vault clusters named `vault-1` and `vault-2` within a Kubernetes cluster (
-using KinD).
+using Kind).
 
 Throughout the process, there are two specific manual actions that require your attention. These actions involve
 unsealing the Vault clusters and creating an `appRole` for the application's interaction.
