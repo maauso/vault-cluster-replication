@@ -1,3 +1,4 @@
+---
 name: go-tests
 on:
   pull_request:
@@ -19,7 +20,12 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v2
       - name: go-tests
-        run: go test ./... -v
+        run: |
+          go test -race -coverprofile=coverage.out -covermode=atomic ./... -v
+      - name: Upload coverage to Codecov
+        uses: codecov/codecov-action@v3
+        env:
+          CODECOV_TOKEN: ${{ secrets.CODECOV_TOKEN }}
   Gosec:
     runs-on: ubuntu-latest
     steps:
@@ -29,3 +35,4 @@ jobs:
         uses: securego/gosec@master
         with:
           args: ./...
+

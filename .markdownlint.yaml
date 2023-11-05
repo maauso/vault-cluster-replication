@@ -1,3 +1,4 @@
+---
 # Default state for all rules
 default: true
 
@@ -5,3 +6,9 @@ default: true
 MD013:
   # Number of characters
   line_length: 300
+
+MD033:
+  allowed_elements:
+    - a
+    - p
+    - img
