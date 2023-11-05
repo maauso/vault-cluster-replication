@@ -1,6 +1,8 @@
 package application
 
 import (
+	"time"
+	"vault-cluster-replication/internal/pkg/logs"
 	"vault-cluster-replication/internal/pkg/storage"
 )
 
@@ -10,6 +12,9 @@ var (
 )
 
 func Run(config Config) error {
+	currentTime := time.Now()
+	logs.Logger.Info("Starting replication", "time", currentTime.Format(time.RFC3339))
+
 	credentials, err := generateClusterConfigsFunc(config)
 	if err != nil {
 		return err

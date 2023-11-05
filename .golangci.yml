@@ -31,6 +31,7 @@ linters:
     - wsl
     - scopelint
     - gochecknoglobals
+    - durationcheck
     - gochecknoinits
     - interfacer
     - maligned
