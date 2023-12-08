@@ -3,11 +3,12 @@ package storage
 import (
 	"context"
 	"errors"
+	"testing"
+	"vault-cluster-replication/internal/pkg/storage/mocks"
+
 	auth "github.com/hashicorp/vault/api/auth/approle"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/mock"
-	"testing"
-	"vault-cluster-replication/internal/pkg/storage/mocks"
 )
 
 func TestNewConfiguredVaultClient_Success(t *testing.T) {
