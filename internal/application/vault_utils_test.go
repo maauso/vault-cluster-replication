@@ -1,10 +1,11 @@
 package application
 
 import (
-	"github.com/hashicorp/vault/api"
 	"testing"
 	"vault-cluster-replication/internal/pkg/storage"
 	"vault-cluster-replication/internal/pkg/storage/mocks"
+
+	"github.com/hashicorp/vault/api"
 
 	"github.com/stretchr/testify/assert"
 )
