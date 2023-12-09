@@ -1,7 +1,9 @@
 package application
 
 import (
+	"github.com/hashicorp/vault/api"
 	"testing"
+	"vault-cluster-replication/internal/pkg/storage"
 	"vault-cluster-replication/internal/pkg/storage/mocks"
 
 	"github.com/stretchr/testify/assert"
@@ -21,4 +23,11 @@ func TestCreateVaultClientConfig_Success(t *testing.T) {
 	client, err := createVaultClientConfig(storageAddr)
 	assert.NotNil(t, client)
 	assert.Nil(t, err)
+}
+
+func TestGetStorageClient_ReturnsExpectedSystemClient(t *testing.T) {
+	mockClient := storage.Client{Sys: &api.Sys{}}
+	systemClient := getStorageClient(mockClient)
+
+	assert.NotNil(t, systemClient)
 }
