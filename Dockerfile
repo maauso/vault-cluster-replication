@@ -24,6 +24,6 @@ WORKDIR /app
 ENTRYPOINT ["/app/vault-cluster-replication"]
 
 # Add labels for metadata
-LABEL maintainer="Your Name <m.auso.p@gmail.com>"
-LABEL version="1.0"
+LABEL maintainer="Miguel Ausó"
+LABEL version="1.1.0"
 LABEL description="Vault Cluster Replication Application"
