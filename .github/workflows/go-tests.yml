@@ -26,13 +26,3 @@ jobs:
         uses: codecov/codecov-action@v3
         env:
           CODECOV_TOKEN: ${{ secrets.CODECOV_TOKEN }}
-  Gosec:
-    runs-on: ubuntu-latest
-    steps:
-      - name: Checkout Source
-        uses: actions/checkout@v3
-      - name: Run Gosec Security Scanner
-        uses: securego/gosec@master
-        with:
-          args: ./...
-

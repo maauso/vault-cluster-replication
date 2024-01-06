@@ -14,7 +14,8 @@
     - [Environment Variables](#environment-variables)
     - [Replication Configuration](#replication-configuration)
     - [Credentials Configuration](#credentials-configuration)
-    - [(WIP) - Usage](#wip---usage)
+  - [Deploy to Kubernetes](#deploy-to-kubernetes)
+    - [Deployment command](#deployment-command)
   - [Run vault-cluster-replication locally](#run-vault-cluster-replication-locally)
     - [Prerequisites](#prerequisites)
     - [Setup](#setup)
@@ -119,7 +120,24 @@ path "sys/raft/snapshots/*/restore" {
 
 For enhanced security, consider using Kubernetes Secrets to store the configuration and credentials for the Hashicorp Vault Cluster Replication Application. Kubernetes Secrets allow you to store sensitive information in a secure manner, separate from your application code.
 
-### (WIP) - Usage
+## Deploy to Kubernetes
+
+The application can be deployed to Kubernetes using the [Helm chart](./deployment/kubernetes/helm/).
+
+The Helm chart requires the following configuration to be set:
+
+- `configFile`: The path to the configuration file.
+- `scheduledExecutionInterval`: The interval at which the synchronization process is executed. The default value is `5m`.
+  Values must be `s` (seconds), `m` (minutes), `h` (hours)
+  - Example: `10s` (10 seconds), `5m` (5 minutes), `1h30m` (1 hour and 30 minutes)
+  - Default: `5m`
+  - Required: `false`
+
+### Deployment command
+
+```bash
+helm install vault-cluster-replication ./deployment/kubernetes/helm/ -f ./deployment/kubernetes/helm/values.yaml
+```
 
 ## Run vault-cluster-replication locally
 
