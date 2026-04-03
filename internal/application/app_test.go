@@ -1,14 +1,14 @@
 package application
 
 import (
-	"fmt"
+	"errors"
 	"reflect"
 	"testing"
 	"vault-cluster-replication/internal/pkg/storage"
 	"vault-cluster-replication/internal/pkg/storage/mocks"
 
-	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/mock"
+	"github.com/stretchr/testify/require"
 )
 
 func TestReplicator_ok(t *testing.T) {
@@ -48,7 +48,7 @@ func TestReplicator_ok(t *testing.T) {
 	mockSyncer.On("PullSnapshot").Once().Return("backupDone", nil)
 	mockSyncer.On("PushSnapshot", "backupDone").Once().Return(nil)
 	err := performReplication(config, credentials)
-	assert.Equal(t, nil, err)
+	require.NoError(t, err)
 	mockSyncer.AssertExpectations(t)
 	mock.AssertExpectationsForObjects(t, mockSyncer)
 }
@@ -87,9 +87,9 @@ func TestReplicator_PullSnapshot_Error(t *testing.T) {
 		},
 	}
 
-	mockSyncer.On("PullSnapshot").Once().Return("", fmt.Errorf("error PullSnapshot"))
+	mockSyncer.On("PullSnapshot").Once().Return("", errors.New("error PullSnapshot"))
 	err := performReplication(config, credentials)
-	assert.EqualError(t, err, "error PullSnapshot")
+	require.EqualError(t, err, "error PullSnapshot")
 	mockSyncer.AssertExpectations(t)
 	mock.AssertExpectationsForObjects(t, mockSyncer)
 }
@@ -129,9 +129,9 @@ func TestReplicator_PushSnapshot_Error(t *testing.T) {
 	}
 
 	mockSyncer.On("PullSnapshot").Once().Return("backupDone", nil)
-	mockSyncer.On("PushSnapshot", "backupDone").Once().Return(fmt.Errorf("error PushSnapshot"))
+	mockSyncer.On("PushSnapshot", "backupDone").Once().Return(errors.New("error PushSnapshot"))
 	err := performReplication(config, credentials)
-	assert.EqualError(t, err, "error PushSnapshot")
+	require.EqualError(t, err, "error PushSnapshot")
 	mockSyncer.AssertExpectations(t)
 	mock.AssertExpectationsForObjects(t, mockSyncer)
 }
@@ -240,7 +240,7 @@ func TestRun_generateConfigs_Error(t *testing.T) {
 	generateClusterConfigsFunc = func(config Config) (ClusterCredentials, error) {
 		// Simulate the behavior of the mock generateClustersConfigs
 		// You can use assertions here if you need
-		return nil, fmt.Errorf("error generateClustersConfigs")
+		return nil, errors.New("error generateClustersConfigs")
 	}
 
 	// Call the Run function
@@ -273,7 +273,7 @@ func TestRun_replicateFunc_Error(t *testing.T) {
 	replicateFunc = func(config Config, credentials ClusterCredentials) error {
 		// Simulate the behavior of the mock performReplication
 		// You can use assertions here if you need
-		return fmt.Errorf("error performReplication")
+		return errors.New("error performReplication")
 	}
 
 	// Call the Run function

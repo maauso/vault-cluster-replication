@@ -23,7 +23,7 @@ func TestCreateVaultClientConfig_Success(t *testing.T) {
 	storageAddr := "http://localhost:8200"
 	client, err := createVaultClientConfig(storageAddr)
 	assert.NotNil(t, client)
-	assert.Nil(t, err)
+	assert.NoError(t, err)
 }
 
 func TestGetStorageClient_ReturnsExpectedSystemClient(t *testing.T) {
