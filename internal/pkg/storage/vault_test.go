@@ -2,14 +2,14 @@ package storage
 
 import (
 	"bytes"
-	"fmt"
+	"errors"
 	"io"
 	"os"
 	"testing"
 	"vault-cluster-replication/internal/pkg/storage/mocks"
 
-	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/mock"
+	"github.com/stretchr/testify/require"
 )
 
 func TestSystem_PullSnapshot_OK(t *testing.T) {
@@ -19,8 +19,9 @@ func TestSystem_PullSnapshot_OK(t *testing.T) {
 	var snapshot bytes.Buffer
 	var writer io.Writer
 	mockSys.On("RaftSnapshot", &snapshot).Once().Return(writer, nil)
-	_, err := sys.PullSnapshot()
-	assert.Equal(t, nil, err)
+	backupFile, err := sys.PullSnapshot()
+	t.Cleanup(func() { os.Remove(backupFile) })
+	require.NoError(t, err)
 	mockSys.AssertExpectations(t)
 	mock.AssertExpectationsForObjects(t, mockSys)
 }
@@ -30,9 +31,9 @@ func TestSystem_PullSnapshot_Err(t *testing.T) {
 	system := NewClient(nil, mockSys, nil)
 	sys := NewSystem(system.Sys)
 	var snapshot bytes.Buffer
-	mockSys.On("RaftSnapshot", &snapshot).Once().Return(fmt.Errorf("error"))
+	mockSys.On("RaftSnapshot", &snapshot).Once().Return(errors.New("error"))
 	_, err := sys.PullSnapshot()
-	assert.Error(t, err)
+	require.Error(t, err)
 	mockSys.AssertExpectations(t)
 	mock.AssertExpectationsForObjects(t, mockSys)
 }
@@ -41,15 +42,17 @@ func TestSystem_PushSnapshot_OK(t *testing.T) {
 	mockSys := mocks.NewSys(t)
 	system := NewClient(nil, mockSys, nil)
 	sys := NewSystem(system.Sys)
-	// Create a test file
-	err := os.WriteFile("test.txt", []byte("test"), 0o600)
+	// Create a test file in a temp directory
+	dir := t.TempDir()
+	testFile := dir + "/test.txt"
+	err := os.WriteFile(testFile, []byte("test"), 0o600)
 	if err != nil {
 		return
 	}
 
 	mockSys.On("RaftSnapshotRestore", mock.Anything, true).Once().Return(nil)
-	err = sys.PushSnapshot("test.txt")
-	assert.Equal(t, nil, err)
+	err = sys.PushSnapshot(testFile)
+	require.NoError(t, err)
 	mockSys.AssertExpectations(t)
 	mock.AssertExpectationsForObjects(t, mockSys)
 }
@@ -58,15 +61,17 @@ func TestSystem_PushSnapshot_Err(t *testing.T) {
 	mockSys := mocks.NewSys(t)
 	system := NewClient(nil, mockSys, nil)
 	sys := NewSystem(system.Sys)
-	// Create a test file
-	err := os.WriteFile("test.txt", []byte("test"), 0o600)
+	// Create a test file in a temp directory
+	dir := t.TempDir()
+	testFile := dir + "/test.txt"
+	err := os.WriteFile(testFile, []byte("test"), 0o600)
 	if err != nil {
 		return
 	}
 
-	mockSys.On("RaftSnapshotRestore", mock.Anything, true).Once().Return(fmt.Errorf("error"))
-	err = sys.PushSnapshot("test.txt")
-	assert.Error(t, err)
+	mockSys.On("RaftSnapshotRestore", mock.Anything, true).Once().Return(errors.New("error"))
+	err = sys.PushSnapshot(testFile)
+	require.Error(t, err)
 	mockSys.AssertExpectations(t)
 	mock.AssertExpectationsForObjects(t, mockSys)
 }
