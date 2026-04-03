@@ -19,7 +19,8 @@ func TestSystem_PullSnapshot_OK(t *testing.T) {
 	var snapshot bytes.Buffer
 	var writer io.Writer
 	mockSys.On("RaftSnapshot", &snapshot).Once().Return(writer, nil)
-	_, err := sys.PullSnapshot()
+	backupFile, err := sys.PullSnapshot()
+	t.Cleanup(func() { os.Remove(backupFile) })
 	require.NoError(t, err)
 	mockSys.AssertExpectations(t)
 	mock.AssertExpectationsForObjects(t, mockSys)
