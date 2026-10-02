@@ -1,6 +1,9 @@
 package application
 
-import "fmt"
+import (
+	"errors"
+	"fmt"
+)
 
 // ConfigValidator validates the given Config struct and returns an error if any validation fails.
 func ConfigValidator(cnf Config) error {
@@ -58,18 +61,18 @@ func (c *Config) ensureActiveNodeIsNotPassive() error {
 // ensureNotEmptySyncConfig check if the SyncConfig array is empty.
 func (c *Config) ensureNotEmptySyncConfig() error {
 	if len(c.Replication) == 0 {
-		return fmt.Errorf("SyncConfig array is empty")
+		return errors.New("SyncConfig array is empty")
 	}
 	for _, syncConfig := range c.Replication {
 		if syncConfig.Active == "" {
-			return fmt.Errorf("active node is empty")
+			return errors.New("active node is empty")
 		}
 		if len(syncConfig.SyncTo) == 0 {
-			return fmt.Errorf("passive nodes array is empty")
+			return errors.New("passive nodes array is empty")
 		}
 		for _, syncTo := range syncConfig.SyncTo {
 			if syncTo == "" {
-				return fmt.Errorf("passive node is empty")
+				return errors.New("passive node is empty")
 			}
 		}
 	}
@@ -80,11 +83,11 @@ func (c *Config) ensureNotEmptySyncConfig() error {
 // ensureNotEmptyCredentials check if the credentials array is empty.
 func (c *Config) ensureNotEmptyCredentials() error {
 	if len(c.Credentials) == 0 {
-		return fmt.Errorf("credentials array is empty")
+		return errors.New("credentials array is empty")
 	}
 	for _, cluster := range c.Credentials {
 		if cluster.Name == "" {
-			return fmt.Errorf("cluster name is empty")
+			return errors.New("cluster name is empty")
 		}
 		if cluster.AppRole == "" {
 			return fmt.Errorf("cluster username is empty, cluster: %s", cluster.Name)

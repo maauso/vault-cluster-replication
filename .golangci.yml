@@ -1,21 +1,21 @@
 ---
 run:
   timeout: 10m
-  # Exclude vendor and auto-generated files
-  skip-dirs:
+  # Specify concurrency level for linting
+  concurrency: 4
+
+issues:
+  exclude-dirs:
     - vendor
     - .git
     - _tools
-  # Specify concurrency level for linting
-  concurrency: 4
 
 linters-settings:
   gocyclo:
     # Set cyclomatic complexity threshold (adjust as needed)
     enabled: true
     threshold: 15
-  govet:
-    check-shadowing: true
+  govet: {}
   funlen:
     lines: 180
   wrapcheck:
@@ -29,19 +29,9 @@ linters:
   enable-all: true
   disable:
     - wsl
-    - scopelint
     - gochecknoglobals
     - durationcheck
     - gochecknoinits
-    - interfacer
-    - maligned
-    - golint
-    - deadcode
-    - ifshort
-    - varcheck
-    - structcheck
-    - nosnakecase
-    - exhaustivestruct
     - testpackage
     - gci
     - tagliatelle
@@ -51,12 +41,13 @@ linters:
     - exhaustruct
     - varnamelen
     - noctx
-    - goerr113
+    - err113
     - gofumpt
+    - tenv
     # review below
     - forcetypeassert
     - contextcheck
     - revive
     - paralleltest
     - tparallel
-    - gomnd
+    - mnd

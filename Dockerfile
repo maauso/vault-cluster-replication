@@ -1,5 +1,5 @@
-# Use the latest Go version (replace '1.20' with the appropriate version)
-FROM golang:1.20-alpine as builder
+# Use the latest Go version (replace '1.24' with the appropriate version)
+FROM golang:1.24-alpine as builder
 
 WORKDIR /go/src/app
 COPY . .
@@ -8,7 +8,7 @@ COPY . .
 RUN go mod download \
     && go build -o vault-cluster-replication ./cmd/main.go
 
-FROM golang:1.20-alpine
+FROM golang:1.24-alpine
 
 # Copy only the built binary from the builder stage
 COPY --from=builder /go/src/app/vault-cluster-replication /app/vault-cluster-replication

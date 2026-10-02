@@ -1,7 +1,6 @@
 package storage
 
 import (
-	"context"
 	"errors"
 	"testing"
 	"vault-cluster-replication/internal/pkg/storage/mocks"
@@ -9,13 +8,14 @@ import (
 	auth "github.com/hashicorp/vault/api/auth/approle"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/mock"
+	"github.com/stretchr/testify/require"
 )
 
 func TestNewConfiguredVaultClient_Success(t *testing.T) {
 	vaultAddr := "http://localhost:8200"
 	client, err := NewConfiguredVaultClient(vaultAddr)
 	assert.NotNil(t, client)
-	assert.Nil(t, err)
+	require.NoError(t, err)
 }
 
 func TestAuthenticateWithAppRole_Success(t *testing.T) {
@@ -27,9 +27,9 @@ func TestAuthenticateWithAppRole_Success(t *testing.T) {
 		t.Fatal(err)
 	}
 
-	mockAuth.On("Login", context.TODO(), appRoleAuth).Once().Return(nil, nil)
+	mockAuth.On("Login", mock.Anything, appRoleAuth).Once().Return(nil, nil)
 	_, err = AuthenticateWithAppRole(client, "appRoleID", "appSecretID")
-	assert.Equal(t, nil, err)
+	require.NoError(t, err)
 	mockAuth.AssertExpectations(t)
 	mock.AssertExpectationsForObjects(t, mockAuth)
 }
@@ -43,9 +43,9 @@ func TestAuthenticateWithAppRole_FailureInvalidAppRoleAuth(t *testing.T) {
 		t.Fatal(err)
 	}
 
-	mockAuth.On("Login", context.TODO(), appRoleAuth).Once().Return(nil, errors.New("invalid appRole"))
+	mockAuth.On("Login", mock.Anything, appRoleAuth).Once().Return(nil, errors.New("invalid appRole"))
 	_, err = AuthenticateWithAppRole(client, "invalidAppRoleID", "appSecretID")
-	assert.NotNil(t, err)
+	require.Error(t, err)
 	mockAuth.AssertExpectations(t)
 	mock.AssertExpectationsForObjects(t, mockAuth)
 }
@@ -54,7 +54,7 @@ func TestAuthenticateWithAppRole_FailureInvalidSecretID(t *testing.T) {
 	mockAuth := mocks.NewAuth(t)
 	client := NewClient(nil, nil, mockAuth)
 	_, err := AuthenticateWithAppRole(client, "", "appSecretID")
-	assert.NotNil(t, err)
+	require.Error(t, err)
 	mockAuth.AssertExpectations(t)
 	mock.AssertExpectationsForObjects(t, mockAuth)
 }
@@ -63,7 +63,7 @@ func TestAuthenticateWithAppRole_FailureInvalidAppRoleID(t *testing.T) {
 	mockAuth := mocks.NewAuth(t)
 	client := NewClient(nil, nil, mockAuth)
 	_, err := AuthenticateWithAppRole(client, "invalidAppRoleID", "")
-	assert.NotNil(t, err)
+	require.Error(t, err)
 	mockAuth.AssertExpectations(t)
 	mock.AssertExpectationsForObjects(t, mockAuth)
 }

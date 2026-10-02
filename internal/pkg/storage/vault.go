@@ -16,6 +16,7 @@ import (
 )
 
 const filePermission = 0o600
+const snapshotIdentifierSize = 16
 
 // Syncer is an interface that provides methods for pulling and pushing snapshots.
 //
@@ -37,7 +38,7 @@ func NewSystem(sys Sys) *System {
 // It returns the name of the file where the snapshot was written.
 func (s System) PullSnapshot() (string, error) {
 	// Generate a unique identifier for the snapshot file name
-	identifier := make([]byte, 16)
+	identifier := make([]byte, snapshotIdentifierSize)
 	_, err := rand.Read(identifier)
 	if err != nil {
 		return "", fmt.Errorf("unable to generate snapshot identifier, %s", err.Error())

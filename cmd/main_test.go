@@ -1,7 +1,6 @@
 package main
 
 import (
-	"os"
 	"reflect"
 	"testing"
 	"time"
@@ -75,20 +74,11 @@ func Test_parseConfig(t *testing.T) {
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
 			if tt.name == "Custom config" {
-				err := os.Setenv("CONFIG_FILE_PATH", "configs/custom-conf.yaml")
-				if err != nil {
-					t.Errorf("parseConfig() = %v", err)
-				}
-				err = os.Setenv("SCHEDULED_EXECUTION_INTERVAL", "10m")
-				if err != nil {
-					t.Errorf("parseConfig() = %v", err)
-				}
+				t.Setenv("CONFIG_FILE_PATH", "configs/custom-conf.yaml")
+				t.Setenv("SCHEDULED_EXECUTION_INTERVAL", "10m")
 			}
 			if tt.name == "Custom config with invalid interval" {
-				err := os.Setenv("SCHEDULED_EXECUTION_INTERVAL", "10y")
-				if err != nil {
-					t.Errorf("parseConfig() = %v", err)
-				}
+				t.Setenv("SCHEDULED_EXECUTION_INTERVAL", "10y")
 			}
 
 			if got, _ := parseConfig(); !reflect.DeepEqual(got, tt.want) {
